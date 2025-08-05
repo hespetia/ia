@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Universo de la IA: Guía Interactiva</title>
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: The SPA is architected as a top-down educational journey. It starts with a broad introduction to AI fundamentals, then uses an interactive tab system to allow users to dive deep into the three core machine learning paradigms (Supervised, Unsupervised, Reinforcement). This structure supports both linear learning and focused exploration. The journey concludes with practical applications and critical ethical considerations, providing a holistic overview. This modular, tab-based design was chosen for clarity and to prevent overwhelming the user with information, making it ideal for a student audience. -->
+    <!-- Visualization & Content Choices:
+        - Learning Paradigms Navigation: Goal: Organize. Viz: Interactive HTML/JS tabs. Interaction: Clicking a tab reveals the detailed content for that paradigm. Justification: This is a classic, user-friendly UI pattern for segmenting complex information within a single page, preventing clutter.
+        - Supervised Learning Process: Goal: Organize/Inform. Viz: Interactive HTML/CSS/JS diagram. Interaction: A button animates the flow from Labeled Data to Prediction. Justification: Turns a static concept into an engaging, step-by-step demonstration. Method: HTML/CSS with JS DOM manipulation. NO SVG/Mermaid.
+        - Reinforcement Learning Loop: Goal: Organize/Inform. Viz: Interactive HTML/CSS/JS diagram. Interaction: A button animates the Agent-Environment cycle. Justification: Reinforces the core feedback loop of RL through active user engagement. Method: HTML/CSS with JS. NO SVG/Mermaid.
+        - Classification vs. Regression: Goal: Compare. Viz: Bar chart. Justification: A simple bar chart is the clearest way to show distinct examples for two competing concepts. Library: Chart.js (Canvas).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; color: #1e3a5f; }
+        .chart-container { position: relative; height: 300px; width: 100%; max-width: 500px; margin: auto; }
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        .tab-btn { transition: all 0.3s ease; border-bottom: 4px solid transparent; }
+        .tab-btn.active { border-color: #3b82f6; color: #3b82f6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .flow-item { transition: all 0.5s ease-in-out; }
+        .flow-item.active { transform: scale(1.1); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .flow-arrow { transition: color 0.5s ease-in-out; }
+        .flow-arrow.active { color: #3b82f6; }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-primary:hover { background-color: #1e3a5f; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-blue-600">Fundamentos de Inteligencia Artificial</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">Una guía para estudiantes de ingeniería de sistemas, explorando los fundamentos y los paradigmas clave del Aprendizaje Automático.</p>
+        </header>
+
+        <main>
+            <section id="paradigms" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Paradigmas del Aprendizaje Automático</h2>
+                <div class="card p-4 sm:p-8">
+                    <div class="border-b border-gray-200 mb-8">
+                        <nav class="flex flex-wrap -mb-px justify-center" aria-label="Tabs">
+                            <button class="tab-btn active font-bold py-4 px-6" data-tab="supervised">🧠 Aprendizaje Supervisado</button>
+                            <button class="tab-btn font-bold py-4 px-6" data-tab="unsupervised">🧩 Aprendizaje No Supervisado</button>
+                            <button class="tab-btn font-bold py-4 px-6" data-tab="reinforcement">🤖 Aprendizaje por Refuerzo</button>
+                        </nav>
+                    </div>
+
+                    <!-- Supervised Learning Content -->
+                    <div id="supervised" class="tab-content active animate-fade-in">
+                        <h3 class="text-2xl font-bold mb-2">Aprendizaje Supervisado: Aprender con un Maestro</h3>
+                        <p class="mb-6 text-gray-600">En este paradigma, el modelo aprende de datos que ya han sido etiquetados con la respuesta correcta, como un estudiante que aprende de un libro de texto con soluciones. El objetivo es predecir la etiqueta correcta para datos nuevos.</p>
+                        
+                        <div class="bg-gray-50 rounded-lg p-6 my-8">
+                            <h4 class="text-xl font-bold text-center mb-6">El Proceso Supervisado</h4>
+                            <div class="flex flex-col md:flex-row items-center justify-around gap-2 text-center text-sm md:text-base">
+                                <div id="sl-item-1" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>📂<br><span class="font-bold">Datos Etiquetados</span></div></div>
+                                <div id="sl-arrow-1" class="flow-arrow text-4xl font-bold">&rarr;</div>
+                                <div id="sl-item-2" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>⚙️<br><span class="font-bold">Entrenamiento</span></div></div>
+                                <div id="sl-arrow-2" class="flow-arrow text-4xl font-bold">&rarr;</div>
+                                <div id="sl-item-3" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>💡<br><span class="font-bold">Modelo Entrenado</span></div></div>
+                                <div id="sl-arrow-3" class="flow-arrow text-4xl font-bold">&rarr;</div>
+                                <div id="sl-item-4" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>🎯<br><span class="font-bold">Predicción</span></div></div>
+                            </div>
+                             <div class="text-center mt-6">
+                                <button id="run-sl-loop-btn" class="btn-primary font-bold py-2 px-6 rounded-lg transition-colors text-sm">Ver Proceso</button>
+                            </div>
+                        </div>
+
+                        <div class="chart-container mx-auto">
+                            <canvas id="supervisedTasksChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Unsupervised Learning Content -->
+                    <div id="unsupervised" class="tab-content animate-fade-in">
+                        <h3 class="text-2xl font-bold mb-2">Aprendizaje No Supervisado: Encontrar Orden en el Caos</h3>
+                        <p class="mb-6 text-gray-600">Aquí, el modelo trabaja con datos no etiquetados y debe encontrar patrones o estructuras ocultas por sí mismo, como un explorador que crea un mapa de un territorio desconocido. Sus tareas principales son el agrupamiento (clustering) y la reducción de dimensionalidad.</p>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                            <div class="card p-6">
+                                <h4 class="font-bold text-lg mb-2">Agrupamiento (Clustering)</h4>
+                                <p class="text-gray-600">Organiza datos en grupos basados en sus similitudes. <br><b>Ejemplo:</b> Segmentación de clientes para campañas de marketing personalizadas.</p>
+                            </div>
+                             <div class="card p-6">
+                                <h4 class="font-bold text-lg mb-2">Reducción de Dimensionalidad</h4>
+                                <p class="text-gray-600">Simplifica los datos eliminando variables redundantes, pero conservando la información importante. <br><b>Ejemplo:</b> Compresión de imágenes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reinforcement Learning Content -->
+                    <div id="reinforcement" class="tab-content animate-fade-in">
+                        <h3 class="text-2xl font-bold mb-2">Aprendizaje por Refuerzo: Aprender de la Experiencia</h3>
+                        <p class="mb-6 text-gray-600">El modelo, o "agente", aprende a tomar decisiones interactuando con un entorno. Recibe recompensas por acciones buenas y penalizaciones por malas, como entrenar a una mascota con golosinas.</p>
+
+                        <div class="bg-gray-50 rounded-lg p-6 my-8">
+                            <h4 class="text-xl font-bold text-center mb-6">El Ciclo de Interacción</h4>
+                             <div class="flex flex-col md:flex-row items-center justify-around gap-2 text-center text-sm md:text-base">
+                                <div id="rl-item-1" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>🤖<br><span class="font-bold">Agente</span></div></div>
+                                <div id="rl-arrow-1" class="flow-arrow text-4xl font-bold">&rarr;</div>
+                                <div id="rl-item-2" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>⚡<br><span class="font-bold">Acción</span></div></div>
+                                <div id="rl-arrow-2" class="flow-arrow text-4xl font-bold">&rarr;</div>
+                                <div id="rl-item-3" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>🌍<br><span class="font-bold">Entorno</span></div></div>
+                                <div id="rl-arrow-3" class="flow-arrow text-4xl font-bold">&larr;</div>
+                                <div id="rl-item-4" class="flow-item card p-4 w-40 h-24 flex items-center justify-center"><div>🎁<br><span class="font-bold">Recompensa</span></div></div>
+                            </div>
+                             <div class="text-center mt-6">
+                                <button id="run-rl-loop-btn" class="btn-primary font-bold py-2 px-6 rounded-lg transition-colors text-sm">Ver Ciclo</button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                            <div class="card p-6">
+                                <h4 class="font-bold text-lg mb-2">Dilema Clave: Exploración vs. Explotación</h4>
+                                <p class="text-gray-600">El agente debe equilibrar entre probar acciones nuevas para descubrir mejores recompensas (exploración) y usar las estrategias que ya sabe que funcionan (explotación).</p>
+                            </div>
+                            <div class="card p-6">
+                                <h4 class="font-bold text-lg mb-2">Objetivo Principal</h4>
+                                <p class="text-gray-600">Maximizar la recompensa total acumulada a largo plazo, no solo la recompensa inmediata.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            
+            <section id="applications" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">IA en Acción: Aplicaciones Clave en Ingeniería</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🛠️</div>
+                        <h3 class="font-bold text-lg">Mantenimiento Predictivo</h3>
+                        <p class="text-gray-600 text-sm">(Supervisado) Predecir fallos en maquinaria industrial antes de que ocurran.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">💳</div>
+                        <h3 class="font-bold text-lg">Detección de Fraude</h3>
+                        <p class="text-gray-600 text-sm">(Supervisado) Clasificar transacciones como legítimas o fraudulentas.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🚗</div>
+                        <h3 class="font-bold text-lg">Vehículos Autónomos</h3>
+                        <p class="text-gray-600 text-sm">(Refuerzo / Supervisado) Tomar decisiones de navegación y control en tiempo real.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">👥</div>
+                        <h3 class="font-bold text-lg">Segmentación de Redes</h3>
+                        <p class="text-gray-600 text-sm">(No Supervisado) Identificar anomalías o patrones de tráfico en redes.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="text-center my-16 border-t pt-8">
+            <h2 class="text-2xl font-bold mb-4">Consideraciones Éticas</h2>
+            <p class="text-gray-600 max-w-4xl mx-auto">El desarrollo de la IA exige una reflexión constante sobre la privacidad de los datos, los sesgos algorítmicos, la transparencia y el impacto en la sociedad para asegurar un futuro tecnológico responsable y equitativo.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab navigation
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === tab.dataset.tab) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            const chartDefaultOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Supervised Learning Chart
+            const ctxSupervised = document.getElementById('supervisedTasksChart')?.getContext('2d');
+            if (ctxSupervised) {
+                new Chart(ctxSupervised, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Clasificación (Categorías)', 'Regresión (Valores Numéricos)'],
+                        datasets: [
+                            {
+                                label: 'Ej: Detección de Spam',
+                                data: [100, 0],
+                                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                                stack: 'Stack 0',
+                            },
+                             {
+                                label: 'Ej: Diagnóstico Médico',
+                                data: [80, 0],
+                                backgroundColor: 'rgba(96, 165, 250, 0.7)',
+                                stack: 'Stack 0',
+                            },
+                             {
+                                label: 'Ej: Predicción de Precios',
+                                data: [0, 100],
+                                backgroundColor: 'rgba(251, 146, 60, 0.7)',
+                                stack: 'Stack 1',
+                            },
+                             {
+                                label: 'Ej: Pronóstico del Tiempo',
+                                data: [0, 80],
+                                backgroundColor: 'rgba(252, 165, 165, 0.7)',
+                                stack: 'Stack 1',
+                            }
+                        ]
+                    },
+                    options: { ...chartDefaultOptions, scales: { x: { stacked: true }, y: { stacked: true, display: false } } }
+                });
+            }
+            
+            // Shared animation logic
+            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+            const runFlowAnimation = async (elements, btn) => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+
+                for (const el of elements) {
+                    el.classList.remove('active');
+                }
+                
+                for (const el of elements) {
+                    el.classList.add('active');
+                    await sleep(800);
+                }
+                
+                await sleep(1000);
+                for (const el of elements) {
+                    el.classList.remove('active');
+                }
+                
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            };
+
+            // Supervised Learning flow
+            const slBtn = document.getElementById('run-sl-loop-btn');
+            if(slBtn) {
+                const slElements = [
+                    document.getElementById('sl-item-1'),
+                    document.getElementById('sl-arrow-1'),
+                    document.getElementById('sl-item-2'),
+                    document.getElementById('sl-arrow-2'),
+                    document.getElementById('sl-item-3'),
+                    document.getElementById('sl-arrow-3'),
+                    document.getElementById('sl-item-4')
+                ];
+                slBtn.addEventListener('click', () => runFlowAnimation(slElements, slBtn));
+            }
+            
+            // Reinforcement Learning flow
+            const rlBtn = document.getElementById('run-rl-loop-btn');
+            if(rlBtn) {
+                const rlElements = [
+                    document.getElementById('rl-item-1'),
+                    document.getElementById('rl-arrow-1'),
+                    document.getElementById('rl-item-2'),
+                    document.getElementById('rl-arrow-2'),
+                    document.getElementById('rl-item-3'),
+                    document.getElementById('rl-arrow-3'),
+                    document.getElementById('rl-item-4')
+                ];
+                rlBtn.addEventListener('click', () => runFlowAnimation(rlElements, rlBtn));
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Interactiva: Aprendizaje por Refuerzo</title>
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: The SPA is structured as a narrative educational journey. It begins with a relatable analogy (training a pet) to establish the core idea. The centerpiece is an interactive visualization of the Agent-Environment loop, which users can trigger to see the process unfold. This hands-on approach is key for understanding. The structure then logically progresses to define the core components, explain the Exploration vs. Exploitation dilemma, list key algorithms, showcase real-world engineering applications, and conclude with a balanced view of pros and cons. This sequential flow from concept to interaction to application is designed for optimal learning. -->
+    <!-- Visualization & Content Choices:
+        - Agent-Environment Interaction Loop: Goal: Organize/Inform. Viz: Interactive HTML/CSS/JS diagram. Interaction: A button animates the cycle (Agent -> Action -> Environment -> Reward/State), highlighting each step with color and scaling. Justification: This transforms the central, dynamic process of RL from a static concept into a memorable, engaging experience. It's the most critical visualization for this topic. Method: HTML/CSS with JS DOM manipulation. NO SVG/Mermaid.
+        - Core Components, Algorithms, Applications: Goal: Inform/Organize. Viz: Styled HTML cards in a responsive grid. Interaction: Subtle hover effects. Justification: Cards are a modern, scannable format that breaks down complex information into digestible chunks, perfect for listing concepts or examples. Method: HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f8fa; color: #1c1c1e; }
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        .text-primary-accent { color: #007AFF; }
+        .bg-primary-accent { background-color: #007AFF; }
+        .btn-primary { background-color: #34C759; color: white; }
+        .btn-primary:hover { background-color: #2c9f47; }
+        .btn-primary:disabled { background-color: #a5d6a7; cursor: not-allowed; }
+        .flow-item { transition: all 0.5s ease-in-out; border: 2px solid transparent; }
+        .flow-item.active { transform: scale(1.1); box-shadow: 0 0 20px rgba(52, 199, 89, 0.6); border-color: #34C759; }
+        .flow-arrow { transition: all 0.5s ease-in-out; }
+        .flow-arrow.active { color: #34C759; transform: scale(1.2); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-primary-accent">Aprendizaje por Refuerzo</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">El arte de aprender a tomar decisiones a través de la experiencia y la recompensa.</p>
+        </header>
+
+        <main>
+            <section id="definition" class="my-20">
+                 <div class="card p-8 md:p-12 text-center">
+                    <h2 class="text-3xl font-bold mb-4">¿Qué es? Entrenando con Recompensas</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+                        Es el paradigma donde un **agente** (el aprendiz) aprende a interactuar con un **entorno** (el mundo) para maximizar una **recompensa** acumulada. Piensa en cómo entrenarías a una mascota: le das un premio (recompensa) cuando hace el truco correcto, reforzando ese comportamiento. El agente aprende a base de prueba y error, sin que nadie le diga explícitamente qué hacer.
+                    </p>
+                </div>
+            </section>
+            
+            <section id="interactive-loop" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">El Ciclo de Interacción: Agente ↔ Entorno</h2>
+                 <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">Todo el aprendizaje ocurre en un ciclo continuo. Haz clic en el botón para ver cómo el agente toma una decisión y recibe retroalimentación del entorno.</p>
+                <div class="card p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-around gap-4 text-center">
+                        <!-- Agent -->
+                        <div id="agent-box" class="flow-item card p-6 w-48 h-32 flex flex-col items-center justify-center">
+                            <div class="text-5xl">🤖</div>
+                            <div class="font-bold mt-2">Agente</div>
+                        </div>
+
+                        <!-- Action & Reward -->
+                        <div class="flex flex-col items-center">
+                            <div id="action-arrow" class="flow-arrow text-4xl font-bold text-gray-400">&rarr;</div>
+                            <div class="font-semibold text-sm mt-1">Acción</div>
+                            <div class="font-semibold text-sm mb-1 mt-4">Recompensa / Estado</div>
+                            <div id="reward-arrow" class="flow-arrow text-4xl font-bold text-gray-400">&larr;</div>
+                        </div>
+
+                        <!-- Environment -->
+                        <div id="env-box" class="flow-item card p-6 w-48 h-32 flex flex-col items-center justify-center">
+                           <div class="text-5xl">🌍</div>
+                            <div class="font-bold mt-2">Entorno</div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-10">
+                        <button id="runLoopBtn" class="btn-primary font-bold py-3 px-8 rounded-lg transition-colors text-lg">Iniciar Ciclo de Decisión</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="components" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Componentes Clave del Sistema</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg text-primary-accent">Estado (State)</h3>
+                        <p class="text-gray-600">La "foto" actual del entorno que observa el agente. (Ej: la posición de las piezas en un tablero de ajedrez).</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg text-primary-accent">Política (Policy)</h3>
+                        <p class="text-gray-600">El "cerebro" o la estrategia del agente que decide qué acción tomar en cada estado.</p>
+                    </div>
+                    <div class="card p-6 md:col-span-2 lg:col-span-1">
+                        <h3 class="font-bold text-lg text-primary-accent">Función de Valor (Value)</h3>
+                        <p class="text-gray-600">La predicción de la recompensa futura que se puede obtener desde un estado. Ayuda al agente a planificar a largo plazo.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="dilemma" class="my-20">
+                 <h2 class="text-3xl font-bold text-center mb-10">El Gran Dilema: Exploración vs. Explotación</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div class="card p-8 text-center">
+                         <h3 class="font-bold text-xl text-amber-600 mb-3">🧭 Exploración</h3>
+                         <p class="text-gray-600">Probar acciones nuevas y desconocidas para descubrir si podrían llevar a mejores recompensas. Implica riesgo, pero es esencial para encontrar la estrategia óptima.</p>
+                     </div>
+                     <div class="card p-8 text-center">
+                         <h3 class="font-bold text-xl text-green-600 mb-3">💰 Explotación</h3>
+                         <p class="text-gray-600">Utilizar el conocimiento ya adquirido y tomar las acciones que se sabe que dan las mejores recompensas. Es seguro, pero podría no ser la mejor estrategia posible.</p>
+                     </div>
+                 </div>
+            </section>
+            
+            <section id="applications" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Aplicaciones en Ingeniería de Sistemas</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🚗</div>
+                        <h3 class="font-bold text-lg">Vehículos Autónomos</h3>
+                        <p class="text-gray-600 text-sm">Aprender a navegar, acelerar y frenar para llegar a un destino de forma segura y eficiente.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🏭</div>
+                        <h3 class="font-bold text-lg">Control de Robots</h3>
+                        <p class="text-gray-600 text-sm">Enseñar a brazos robóticos a realizar tareas de ensamblaje complejas con precisión.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">💡</div>
+                        <h3 class="font-bold text-lg">Optimización Energética</h3>
+                        <p class="text-gray-600 text-sm">Gestionar el consumo de energía en centros de datos o redes eléctricas de forma inteligente.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">⛓️</div>
+                        <h3 class="font-bold text-lg">Cadena de Suministro</h3>
+                        <p class="text-gray-600 text-sm">Optimizar el inventario y las rutas de distribución para minimizar costos.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center my-12 border-t pt-8">
+            <p class="text-gray-500">El Aprendizaje por Refuerzo es la clave para construir sistemas verdaderamente autónomos e inteligentes.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const runLoopBtn = document.getElementById('runLoopBtn');
+            const agentBox = document.getElementById('agent-box');
+            const actionArrow = document.getElementById('action-arrow');
+            const envBox = document.getElementById('env-box');
+            const rewardArrow = document.getElementById('reward-arrow');
+
+            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+            
+            const runCycle = async () => {
+                runLoopBtn.disabled = true;
+                runLoopBtn.textContent = 'Procesando...';
+                
+                // Reset classes
+                const elements = [agentBox, actionArrow, envBox, rewardArrow];
+                elements.forEach(el => el.classList.remove('active'));
+
+                // Start cycle
+                await sleep(200);
+                agentBox.classList.add('active'); // Agent decides
+                await sleep(800);
+                
+                actionArrow.classList.add('active'); // Takes action
+                await sleep(800);
+                agentBox.classList.remove('active');
+                actionArrow.classList.remove('active');
+
+                envBox.classList.add('active'); // Environment reacts
+                await sleep(800);
+
+                rewardArrow.classList.add('active'); // Env gives reward
+                await sleep(800);
+                envBox.classList.remove('active');
+                rewardArrow.classList.remove('active');
+
+                // End cycle
+                runLoopBtn.disabled = false;
+                runLoopBtn.textContent = 'Iniciar Ciclo de Decisión';
+            };
+
+            if(runLoopBtn) {
+                 runLoopBtn.addEventListener('click', runCycle);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Interactiva: Aprendizaje No Supervisado</title>
+    <!-- Chosen Palette: Warm & Welcoming -->
+    <!-- Application Structure Plan: The SPA follows a narrative structure designed for education. It begins with the core concept and analogy ("The Data Explorer"). It then breaks down the main "tasks" (Clustering, Dimensionality Reduction) into digestible cards. The centerpiece is an interactive K-Means clustering demonstration, allowing users to actively engage with the algorithm. The structure then logically flows to the "tools" (algorithms), real-world engineering applications, and finally, a balanced summary of pros and cons. This "concept -> interaction -> application" flow is designed to build understanding step-by-step for a student audience. -->
+    <!-- Visualization & Content Choices:
+        - K-Means Clustering Demo: Goal: Organize/Relationships. Viz: Interactive Scatter Plot. Interaction: A button triggers a JS function that runs a simplified K-Means algorithm on a data cloud and updates the chart to show the resulting clusters in different colors. Justification: This provides a hands-on, "wow-factor" experience that makes the abstract concept of clustering concrete and understandable. Library: Chart.js (Canvas). NO SVG.
+        - Problem Types & Algorithms: Goal: Inform/Organize. Viz: Styled HTML cards in a grid layout. Interaction: Subtle hover effects for engagement. Justification: Cards are a modern, clean, and highly scannable method for presenting distinct concepts, superior to a dense text block. Method: HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fdfaf6; color: #4a4a4a; }
+        .chart-container { position: relative; height: 400px; width: 100%; max-width: 600px; margin: auto; }
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid #f0e9e1; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07); }
+        .btn-primary { background-color: #d97706; color: white; }
+        .btn-primary:hover { background-color: #b45309; }
+        .text-accent { color: #d97706; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-accent">Aprendizaje No Supervisado</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">El arte de encontrar patrones ocultos y descubrir la estructura secreta de los datos.</p>
+        </header>
+
+        <main>
+            <section id="definition" class="my-20">
+                 <div class="card p-8 md:p-12 text-center">
+                    <h2 class="text-3xl font-bold mb-4">¿Qué es? El Explorador de Datos sin Mapa</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+                        Es una rama del Machine Learning donde el algoritmo trabaja con datos **sin etiquetar**. Su misión es explorar y encontrar la estructura inherente, como un explorador que cartografía un territorio desconocido sin ninguna guía. No busca predecir una respuesta, sino **descubrir grupos, patrones y relaciones ocultas**.
+                    </p>
+                </div>
+            </section>
+            
+            <section id="interactive-demo" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Demostración Interactiva: Agrupamiento con K-Means</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">Una de las tareas más comunes es el **agrupamiento (clustering)**. El algoritmo K-Means intenta agrupar los datos en un número (K) de clusters. Haz clic en el botón para ver cómo el algoritmo asigna cada punto de datos a uno de los 3 grupos.</p>
+                <div class="card p-8">
+                    <div class="chart-container">
+                        <canvas id="kmeansChart"></canvas>
+                    </div>
+                    <div class="text-center mt-8">
+                        <button id="runKmeansBtn" class="btn-primary font-bold py-3 px-8 rounded-lg transition-colors text-lg">Ejecutar K-Means (k=3)</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="types" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Principales Tareas y Problemas</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-xl text-accent mb-2">🧩 Agrupamiento (Clustering)</h3>
+                        <p class="text-gray-600">Organiza datos en grupos (clusters) donde los miembros son similares entre sí. <br><b>Aplicación:</b> Segmentación de clientes en marketing para crear campañas personalizadas.</p>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-xl text-accent mb-2">📉 Reducción de Dimensionalidad</h3>
+                        <p class="text-gray-600">Simplifica datos complejos reduciendo el número de variables, pero conservando la información esencial. <br><b>Aplicación:</b> Compresión de imágenes para ahorrar espacio de almacenamiento.</p>
+                    </div>
+                     <div class="card p-6 md:col-span-2 lg:col-span-1">
+                        <h3 class="font-bold text-xl text-accent mb-2">🛒 Minería de Reglas de Asociación</h3>
+                        <p class="text-gray-600">Descubre relaciones interesantes entre variables en grandes bases de datos. <br><b>Aplicación:</b> El famoso "análisis de la cesta de la compra" para saber qué productos se compran juntos.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="algorithms" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">La Caja de Herramientas: Algoritmos Populares</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg">K-Means</h3>
+                        <p class="text-gray-600 text-sm">El más famoso para clustering. Divide los datos en un número predefinido (K) de grupos.</p>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-lg">DBSCAN</h3>
+                        <p class="text-gray-600 text-sm">Un algoritmo de clustering basado en densidad, capaz de encontrar clusters con formas complejas y detectar ruido.</p>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-lg">Análisis de Componentes Principales (PCA)</h3>
+                        <p class="text-gray-600 text-sm">El algoritmo por excelencia para reducción de dimensionalidad, encuentra las "direcciones" más importantes de los datos.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="applications" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Aplicaciones en Ingeniería de Sistemas</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">📡</div>
+                        <h3 class="font-bold text-lg">Detección de Anomalías</h3>
+                        <p class="text-gray-600 text-sm">Identificar patrones de tráfico de red inusuales que puedan indicar un ciberataque.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🎬</div>
+                        <h3 class="font-bold text-lg">Sistemas de Recomendación</h3>
+                        <p class="text-gray-600 text-sm">Agrupar usuarios con gustos similares para mejorar las recomendaciones de productos o películas.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🗜️</div>
+                        <h3 class="font-bold text-lg">Compresión de Datos</h3>
+                        <p class="text-gray-600 text-sm">Reducir el tamaño de grandes volúmenes de datos para un almacenamiento y transmisión eficientes.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🧬</div>
+                        <h3 class="font-bold text-lg">Análisis Biológico</h3>
+                        <p class="text-gray-600 text-sm">Agrupar genes con funciones similares para investigación genómica.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center my-12 border-t pt-8 border-amber-200">
+            <p class="text-gray-500">El Aprendizaje No Supervisado es la llave para desvelar el conocimiento oculto en el universo de los datos.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const generateData = (numPoints, clusters) => {
+                const data = [];
+                for (let i = 0; i < clusters.length; i++) {
+                    const { x, y, spread } = clusters[i];
+                    for (let j = 0; j < numPoints / clusters.length; j++) {
+                        data.push({
+                            x: x + (Math.random() - 0.5) * spread,
+                            y: y + (Math.random() - 0.5) * spread,
+                        });
+                    }
+                }
+                return data;
+            };
+
+            const initialDataPoints = generateData(150, [
+                { x: 20, y: 25, spread: 30 },
+                { x: 70, y: 70, spread: 35 },
+                { x: 80, y: 20, spread: 25 }
+            ]);
+
+            const runKmeansBtn = document.getElementById('runKmeansBtn');
+            const ctxKmeans = document.getElementById('kmeansChart')?.getContext('2d');
+            let kmeansChart;
+
+            const colors = ['#d97706', '#059669', '#2563eb'];
+            
+            const simpleKMeans = (data, k) => {
+                let centroids = data.slice(0, k).map(d => ({...d}));
+                let assignments = [];
+                let iterations = 10;
+
+                const distance = (p1, p2) => Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+
+                for (let i = 0; i < iterations; i++) {
+                    assignments = data.map(point => {
+                        let closestCentroidIndex = 0;
+                        let minDistance = Infinity;
+                        centroids.forEach((centroid, index) => {
+                            const d = distance(point, centroid);
+                            if (d < minDistance) {
+                                minDistance = d;
+                                closestCentroidIndex = index;
+                            }
+                        });
+                        return closestCentroidIndex;
+                    });
+                    
+                    centroids = centroids.map((_, index) => {
+                        const clusterPoints = data.filter((_, pIndex) => assignments[pIndex] === index);
+                        if (clusterPoints.length === 0) return centroids[index];
+                        const sumX = clusterPoints.reduce((sum, p) => sum + p.x, 0);
+                        const sumY = clusterPoints.reduce((sum, p) => sum + p.y, 0);
+                        return { x: sumX / clusterPoints.length, y: sumY / clusterPoints.length };
+                    });
+                }
+                return assignments;
+            };
+
+            const drawChart = (assignments = []) => {
+                if (kmeansChart) {
+                    kmeansChart.destroy();
+                }
+                kmeansChart = new Chart(ctxKmeans, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Puntos de Datos',
+                            data: initialDataPoints,
+                            backgroundColor: assignments.length 
+                                ? initialDataPoints.map((_, i) => colors[assignments[i]] || '#cccccc')
+                                : '#cccccc',
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        scales: {
+                            x: { min: 0, max: 100, grid: { color: '#f0e9e1' } },
+                            y: { min: 0, max: 100, grid: { color: '#f0e9e1' } }
+                        }
+                    }
+                });
+            };
+
+            if (ctxKmeans) {
+                drawChart();
+            }
+
+            runKmeansBtn.addEventListener('click', () => {
+                runKmeansBtn.disabled = true;
+                runKmeansBtn.textContent = 'Agrupando...';
+                runKmeansBtn.classList.add('opacity-50');
+
+                setTimeout(() => {
+                    const assignments = simpleKMeans(initialDataPoints, 3);
+                    drawChart(assignments);
+
+                    runKmeansBtn.disabled = false;
+                    runKmeansBtn.textContent = 'Ejecutar K-Means (k=3)';
+                    runKmeansBtn.classList.remove('opacity-50');
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

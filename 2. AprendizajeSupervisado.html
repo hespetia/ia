@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Interactiva: Aprendizaje Supervisado</title>
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: The application is structured as a top-down educational narrative. It starts with the core definition and analogy (Teacher-Student) to establish a foundation. It then moves to an interactive process flow diagram (Training -> Prediction) to make the mechanism tangible. This is followed by a visual comparison of the two main problem types (Classification vs. Regression) using a bar chart for clarity. The journey continues by showcasing the 'tools' (algorithms), the 'fuel' (data), and the 'report card' (evaluation). Finally, it connects theory to the student's world with real-world engineering applications and a balanced summary of pros and cons. This logical flow from 'what' to 'how' to 'where' is designed for optimal learning and retention. -->
+    <!-- Visualization & Content Choices:
+        - Supervised Learning Process: Goal: Organize/Inform. Viz: Interactive HTML/CSS/JS diagram. Interaction: A button animates the flow from Labeled Data to Prediction, highlighting each step. Justification: Visualizing the process step-by-step reinforces the concept better than static text. Method: HTML/CSS with JS DOM manipulation. NO SVG/Mermaid.
+        - Problem Types (Classification vs. Regression): Goal: Compare. Viz: Grouped Bar Chart. Interaction: Hovering over bars shows tooltips with examples. Justification: A bar chart provides a clear, quantitative-like visual separation of examples for the two categories, making the distinction memorable. Library: Chart.js (Canvas).
+        - Algorithms & Applications: Goal: Inform. Viz: Styled HTML cards in a grid layout. Interaction: Subtle hover effects. Justification: Cards are a modern, scannable, and digestible way to present lists of key concepts or examples. Method: HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; color: #1e3a5f; }
+        .chart-container { position: relative; height: 350px; width: 100%; max-width: 600px; margin: auto; }
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        .flow-item { transition: all 0.5s ease-in-out; }
+        .flow-item.active { transform: scale(1.1); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); border-color: #3b82f6; }
+        .flow-arrow { transition: color 0.5s ease-in-out; }
+        .flow-arrow.active { color: #3b82f6; }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-primary:hover { background-color: #1e3a5f; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-blue-600">Aprendizaje Supervisado</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">El arte de enseñar a las máquinas con ejemplos.</p>
+        </header>
+
+        <main>
+            <section id="definition" class="my-20">
+                 <div class="card p-8 md:p-12 text-center">
+                    <h2 class="text-3xl font-bold mb-4">¿Qué es? Aprender con un Maestro</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+                        Es una rama del Machine Learning donde un algoritmo aprende a partir de datos que ya tienen la "respuesta correcta". Imagina un estudiante (el modelo) aprendiendo de un libro con ejercicios y soluciones (los datos etiquetados). El objetivo es simple: aprender tan bien que pueda resolver problemas nuevos que no estaban en el libro.
+                    </p>
+                </div>
+            </section>
+            
+            <section id="process" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">El Mecanismo: De los Datos a la Predicción</h2>
+                <div class="card p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-around gap-2 text-center text-sm md:text-base">
+                        <div id="flow-item-1" class="flow-item card p-4 w-40 h-28 flex items-center justify-center border-2 border-transparent"><div>📂<br><span class="font-bold">1. Datos Etiquetados</span></div></div>
+                        <div id="flow-arrow-1" class="flow-arrow text-4xl font-bold py-4">&rarr;</div>
+                        <div id="flow-item-2" class="flow-item card p-4 w-40 h-28 flex items-center justify-center border-2 border-transparent"><div>⚙️<br><span class="font-bold">2. Entrenamiento</span></div></div>
+                        <div id="flow-arrow-2" class="flow-arrow text-4xl font-bold py-4">&rarr;</div>
+                        <div id="flow-item-3" class="flow-item card p-4 w-40 h-28 flex items-center justify-center border-2 border-transparent"><div>💡<br><span class="font-bold">3. Modelo Entrenado</span></div></div>
+                        <div id="flow-arrow-3" class="flow-arrow text-4xl font-bold py-4">&rarr;</div>
+                        <div id="flow-item-4" class="flow-item card p-4 w-40 h-28 flex items-center justify-center border-2 border-transparent"><div>🎯<br><span class="font-bold">4. Predicción</span></div></div>
+                    </div>
+                    <div class="text-center mt-8">
+                        <button id="run-flow-btn" class="btn-primary font-bold py-2 px-6 rounded-lg transition-colors">Iniciar Proceso</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="types" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Dos Tipos de Problemas, Dos Misiones Diferentes</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">El aprendizaje supervisado se divide principalmente en dos categorías, dependiendo de lo que queremos predecir.</p>
+                <div class="card p-8">
+                    <div class="chart-container">
+                        <canvas id="typesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="algorithms" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">La Caja de Herramientas del Ingeniero: Algoritmos Populares</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg">Regresión Lineal/Logística</h3>
+                        <p class="text-gray-600 text-sm">Fundamentales para predecir valores numéricos (Lineal) o clasificar entre dos categorías (Logística).</p>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-lg">Árboles de Decisión y Bosques Aleatorios</h3>
+                        <p class="text-gray-600 text-sm">Versátiles para ambos problemas. Toman decisiones secuenciales y combinar muchos árboles (Bosques) mejora la precisión.</p>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-lg">Máquinas de Soporte Vectorial (SVM)</h3>
+                        <p class="text-gray-600 text-sm">Muy potentes para clasificación, buscan la mejor "línea" para separar las categorías de datos.</p>
+                    </div>
+                     <div class="card p-6 col-span-1 sm:col-span-2 lg:col-span-3">
+                        <h3 class="font-bold text-lg">Redes Neuronales y Aprendizaje Profundo</h3>
+                        <p class="text-gray-600 text-sm">Los más potentes y versátiles, especialmente para datos complejos como imágenes, audio y texto. Son la base de los avances más espectaculares en IA.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="applications" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Aplicaciones en Ingeniería de Sistemas</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🛠️</div>
+                        <h3 class="font-bold text-lg">Mantenimiento Predictivo</h3>
+                        <p class="text-gray-600 text-sm">Predecir fallos en maquinaria industrial antes de que ocurran.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">💳</div>
+                        <h3 class="font-bold text-lg">Detección de Fraude</h3>
+                        <p class="text-gray-600 text-sm">Clasificar transacciones como legítimas o fraudulentas.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🤖</div>
+                        <h3 class="font-bold text-lg">Visión por Computadora</h3>
+                        <p class="text-gray-600 text-sm">Permitir a robots identificar objetos y navegar por su entorno.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">📈</div>
+                        <h3 class="font-bold text-lg">Sistemas de Recomendación</h3>
+                        <p class="text-gray-600 text-sm">Predecir qué productos o contenidos le gustarán a un usuario.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center my-12 border-t pt-8">
+            <p class="text-gray-500">El Aprendizaje Supervisado es una herramienta fundamental que transforma datos en decisiones inteligentes.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartDefaultOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            }
+                        }
+                    }
+                },
+                scales: { y: { beginAtZero: true, grid: { color: '#e5e7eb' } }, x: { grid: { display: false } } }
+            };
+
+            // Types Chart
+            const ctxTypes = document.getElementById('typesChart')?.getContext('2d');
+            if (ctxTypes) {
+                new Chart(ctxTypes, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Detección de Spam', 'Diagnóstico Médico', 'Predicción de Precios', 'Pronóstico del Tiempo'],
+                        datasets: [{
+                            label: 'Tipo de Problema',
+                            data: [100, 85, 100, 90],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(251, 146, 60, 0.7)',
+                                'rgba(251, 146, 60, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(59, 130, 246, 1)',
+                                'rgba(59, 130, 246, 1)',
+                                'rgba(251, 146, 60, 1)',
+                                'rgba(251, 146, 60, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...chartDefaultOptions,
+                        plugins: {
+                            ...chartDefaultOptions.plugins,
+                            title: { display: true, text: 'Clasificación (Categorías) vs. Regresión (Valores Numéricos)', font: { size: 16 }, padding: { bottom: 20 } }
+                        }
+                    }
+                });
+            }
+            
+            // Interactive Flow Logic
+            const runFlowBtn = document.getElementById('run-flow-btn');
+            if (runFlowBtn) {
+                const flowItems = [
+                    document.getElementById('flow-item-1'),
+                    document.getElementById('flow-arrow-1'),
+                    document.getElementById('flow-item-2'),
+                    document.getElementById('flow-arrow-2'),
+                    document.getElementById('flow-item-3'),
+                    document.getElementById('flow-arrow-3'),
+                    document.getElementById('flow-item-4')
+                ];
+                
+                const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+                const runCycle = async () => {
+                    runFlowBtn.disabled = true;
+                    runFlowBtn.textContent = 'Procesando...';
+                    runFlowBtn.classList.add('opacity-50');
+
+                    flowItems.forEach(el => el.classList.remove('active'));
+                    
+                    for (const item of flowItems) {
+                        item.classList.add('active');
+                        await sleep(800);
+                    }
+                    
+                    await sleep(1000);
+                    flowItems.forEach(el => el.classList.remove('active'));
+
+                    runFlowBtn.disabled = false;
+                    runFlowBtn.textContent = 'Iniciar Proceso';
+                    runFlowBtn.classList.remove('opacity-50');
+                };
+
+                runFlowBtn.addEventListener('click', runCycle);
+            }
+        });
+    </script>
+</body>
+</html>

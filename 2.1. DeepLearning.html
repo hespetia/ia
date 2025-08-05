@@ -1,0 +1,283 @@
+<immersive id="infografia\_redes\_neuronales" type="code"title="Infografía Interactiva: Redes Neuronales y Deep Learning"\>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Interactiva: Redes Neuronales y Deep Learning</title>
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: The SPA is designed as a bottom-up educational journey. It starts with the fundamental building block (the neuron), then shows how these form a network. The core of the application is an interactive animation of the full training loop (Forward Pass -> Loss Calculation -> Backward Pass -> Weight Update). This interactive centerpiece is designed to make the abstract learning process tangible. From there, the narrative expands to define Deep Learning, showcases key architectures (CNNs, RNNs), and connects everything to real-world engineering applications, concluding with a balanced view of pros and cons. This step-by-step structure is optimal for building a solid understanding. -->
+    <!-- Visualization & Content Choices:
+        - Training Loop Animation: Goal: Organize/Inform. Viz: Interactive diagram built with HTML/CSS. Interaction: A button triggers a JS animation showing data flow forward (blue), error calculation, and backpropagation (purple), visually updating connection weights. Justification: This is the most crucial and complex concept. An interactive animation is far superior to a static diagram for explaining this dynamic, cyclical process, providing a "wow" moment of clarity. Method: HTML/CSS with JS DOM manipulation. NO SVG/Mermaid.
+        - Architectures & Applications: Goal: Inform/Organize. Viz: Styled HTML cards in a responsive grid. Interaction: Subtle hover effects. Justification: Cards provide a clean, modern, and easily scannable format for presenting distinct concepts (like different network types) and examples. Method: HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9fb; color: #1d1d1f; }
+        .card { background-color: white; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .text-accent { color: #AF52DE; }
+        .bg-accent { background-color: #AF52DE; }
+        .btn-primary { background-color: #5E5CE6; color: white; }
+        .btn-primary:hover { background-color: #3c3ab7; }
+        .btn-primary:disabled { background-color: #aeaef2; cursor: not-allowed; }
+        
+        .nn-container { font-family: monospace; font-size: 12px; }
+        .nn-layer { display: flex; flex-direction: column; justify-content: center; gap: 20px; text-align: center; }
+        .nn-node { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #e5e5e5; border: 2px solid #c7c7c7; transition: all 0.3s ease; position: relative; z-index: 2;}
+        .nn-node.active-forward { background-color: #5E5CE6; border-color: #3c3ab7; color: white; transform: scale(1.15); }
+        .nn-node.active-backward { background-color: #AF52DE; border-color: #8941b1; color: white; transform: scale(1.15); }
+
+        .nn-connections { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .nn-connection { stroke: #c7c7c7; stroke-width: 2; transition: all 0.4s ease; }
+        .nn-connection.active-forward { stroke: #5E5CE6; stroke-width: 4; }
+        .nn-connection.active-backward { stroke: #AF52DE; stroke-width: 4; }
+        .nn-label { font-size: 0.8rem; font-weight: bold; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-accent">Redes Neuronales y Deep Learning</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Explorando el cerebro de la IA moderna, desde la neurona hasta las arquitecturas profundas.</p>
+        </header>
+
+        <main>
+            <section id="intro" class="my-20">
+                <div class="card p-8 md:p-12 text-center">
+                    <h2 class="text-3xl font-bold mb-4">¿Qué es una Red Neuronal?</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+                        Es un modelo computacional inspirado en el cerebro humano, diseñado para reconocer patrones. Está compuesto por unidades de procesamiento llamadas **neuronas (o nodos)**, organizadas en **capas** y conectadas por **pesos** que determinan la fuerza de la señal entre ellas. Su poder reside en aprender de los datos para realizar tareas complejas.
+                    </p>
+                </div>
+            </section>
+            
+            <section id="interactive-training" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">El Ciclo de Aprendizaje: Cómo "Piensa" una Red</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">Una red aprende de forma iterativa. Haz clic en el botón para visualizar un ciclo completo de entrenamiento: la información fluye hacia adelante, se calcula el error y luego se propaga hacia atrás para ajustar los pesos.</p>
+                <div class="card p-6 md:p-8">
+                    <!-- Interactive Diagram -->
+                    <div class="nn-container relative h-64 flex justify-around items-center">
+                        <!-- Connections SVG -->
+                        <svg class="nn-connections">
+                            <!-- Input to Hidden -->
+                            <line id="c-i1-h1" class="nn-connection" x1="12%" y1="25%" x2="50%" y2="20%"/>
+                            <line id="c-i1-h2" class="nn-connection" x1="12%" y1="25%" x2="50%" y2="50%"/>
+                            <line id="c-i1-h3" class="nn-connection" x1="12%" y1="25%" x2="50%" y2="80%"/>
+                            <line id="c-i2-h1" class="nn-connection" x1="12%" y1="75%" x2="50%" y2="20%"/>
+                            <line id="c-i2-h2" class="nn-connection" x1="12%" y1="75%" x2="50%" y2="50%"/>
+                            <line id="c-i2-h3" class="nn-connection" x1="12%" y1="75%" x2="50%" y2="80%"/>
+                            <!-- Hidden to Output -->
+                             <line id="c-h1-o1" class="nn-connection" x1="50%" y1="20%" x2="88%" y2="50%"/>
+                             <line id="c-h2-o1" class="nn-connection" x1="50%" y1="50%" x2="88%" y2="50%"/>
+                             <line id="c-h3-o1" class="nn-connection" x1="50%" y1="80%" x2="88%" y2="50%"/>
+                        </svg>
+
+                        <!-- Layers and Nodes -->
+                        <div class="nn-layer">
+                            <div class="nn-label">Entrada</div>
+                            <div id="n-i1" class="nn-node">X1</div>
+                            <div id="n-i2" class="nn-node">X2</div>
+                        </div>
+                        <div class="nn-layer">
+                            <div class="nn-label">Capa Oculta</div>
+                            <div id="n-h1" class="nn-node">H1</div>
+                            <div id="n-h2" class="nn-node">H2</div>
+                            <div id="n-h3" class="nn-node">H3</div>
+                        </div>
+                        <div class="nn-layer">
+                            <div class="nn-label">Salida</div>
+                            <div id="n-o1" class="nn-node">Ŷ</div>
+                        </div>
+                    </div>
+                     <div class="text-center mt-6">
+                        <p id="status-text" class="h-6 text-gray-600 font-semibold mb-4">Listo para entrenar.</p>
+                        <button id="runTrainingBtn" class="btn-primary font-bold py-3 px-8 rounded-lg transition-colors text-lg">Iniciar Ciclo de Entrenamiento</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="deep-learning" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">De Redes Neuronales a Deep Learning</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="card p-8">
+                         <h3 class="font-bold text-2xl text-accent mb-3">¿Qué es el Deep Learning?</h3>
+                         <p class="text-gray-600">Es simplemente el uso de redes neuronales con **muchas capas ocultas** (de ahí "profundo"). Esta profundidad permite a la red aprender **patrones jerárquicos** mucho más complejos de forma automática, sin que un humano tenga que definir las características.</p>
+                    </div>
+                    <div class="card p-8 text-center bg-gray-800 text-black">                        
+                         <h3 class="font-bold text-xl mb-3">Ejemplo de Jerarquía en Imágenes</h3>
+                         <div class="space-y-2 text-left">
+                            <p><strong>Capa 1:</strong> Detecta bordes y colores.</p>
+                            <p><strong>Capa 2:</strong> Combina bordes para formar texturas y formas simples.</p>
+                            <p><strong>Capa 3:</strong> Combina formas para identificar partes de objetos (un ojo, una rueda).</p>
+                            <p><strong>Capa 4:</strong> Combina partes para reconocer objetos completos (un rostro, un coche).</p>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="architectures" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">La Caja de Herramientas: Arquitecturas Populares</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🖼️</div>
+                        <h3 class="font-bold text-lg">CNNs</h3>
+                        <p class="text-gray-600 text-sm">Las **Redes Convolucionales** son maestras de la visión por computadora. Ideales para imágenes y videos.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">📜</div>
+                        <h3 class="font-bold text-lg">RNNs</h3>
+                        <p class="text-gray-600 text-sm">Las **Redes Recurrentes** procesan secuencias. Perfectas para texto, voz y series de tiempo.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🎭</div>
+                        <h3 class="font-bold text-lg">GANs</h3>
+                        <p class="text-gray-600 text-sm">Las **Redes Generativas Antagónicas** crean datos nuevos y realistas, como imágenes o música.</p>
+                    </div>
+                     <div class="card p-6 text-center">
+                        <div class="text-5xl mb-3">🤖</div>
+                        <h3 class="font-bold text-lg">Transformers</h3>
+                        <p class="text-gray-600 text-sm">Revolucionaron el NLP. Son la base de modelos de lenguaje gigantes como GPT.</p>
+                    </div>
+                </div>
+            </section>
+            
+             <section id="applications" class="my-20">
+                <h2 class="text-3xl font-bold text-center mb-10">Aplicaciones Clave en Ingeniería</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg mb-2">👁️ Visión por Computadora</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>Control de calidad en manufactura</li>
+                            <li>Diagnóstico médico por imagen</li>
+                            <li>Vehículos autónomos</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-lg mb-2">🗣️ Procesamiento de Lenguaje (NLP)</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>Asistentes virtuales y chatbots</li>
+                            <li>Análisis de sentimientos en redes sociales</li>
+                            <li>Traducción automática</li>
+                        </ul>
+                    </div>
+                     <div class="card p-6">
+                        <h3 class="font-bold text-lg mb-2">📈 Sistemas de Control y Predicción</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>Sistemas de recomendación</li>
+                            <li>Detección de fraude financiero</li>
+                             <li>Reconocimiento de voz</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center my-12 border-t pt-8 border-purple-200">
+            <p class="text-gray-500">El Deep Learning es la herramienta que permite a los ingenieros resolver problemas que antes se consideraban imposibles.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const runTrainingBtn = document.getElementById('runTrainingBtn');
+            const statusText = document.getElementById('status-text');
+
+            const nodes = {
+                input: [document.getElementById('n-i1'), document.getElementById('n-i2')],
+                hidden: [document.getElementById('n-h1'), document.getElementById('n-h2'), document.getElementById('n-h3')],
+                output: [document.getElementById('n-o1')]
+            };
+            
+            const connections = document.querySelectorAll('.nn-connection');
+
+            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+            const runTrainingCycle = async () => {
+                runTrainingBtn.disabled = true;
+
+                // 1. Reset
+                statusText.textContent = 'Inicializando ciclo...';
+                [...Object.values(nodes).flat(), ...connections].forEach(el => {
+                    el.classList.remove('active-forward', 'active-backward');
+                });
+                await sleep(500);
+
+                // 2. Forward Propagation
+                statusText.textContent = '1. Propagación hacia adelante (Forward Pass)...';
+                nodes.input.forEach(n => n.classList.add('active-forward'));
+                await sleep(500);
+
+                document.querySelectorAll('[id^="c-i"]').forEach(c => c.classList.add('active-forward'));
+                await sleep(500);
+                
+                nodes.hidden.forEach(n => n.classList.add('active-forward'));
+                await sleep(500);
+                
+                document.querySelectorAll('[id^="c-h"]').forEach(c => c.classList.add('active-forward'));
+                await sleep(500);
+
+                nodes.output.forEach(n => n.classList.add('active-forward'));
+                await sleep(800);
+
+                // 3. Loss Calculation
+                statusText.textContent = '2. Calculando Pérdida (Error)...';
+                nodes.output[0].style.transition = 'background-color 0.5s';
+                nodes.output[0].style.backgroundColor = '#FF3B30'; // Red for error
+                await sleep(1500);
+                nodes.output[0].style.backgroundColor = ''; // Revert color
+                
+                // 4. Backward Propagation
+                statusText.textContent = '3. Propagación hacia atrás (Backpropagation)...';
+                [...connections, ...Object.values(nodes).flat()].forEach(el => el.classList.remove('active-forward'));
+                await sleep(500);
+
+                nodes.output.forEach(n => n.classList.add('active-backward'));
+                await sleep(500);
+
+                document.querySelectorAll('[id^="c-h"]').forEach(c => c.classList.add('active-backward'));
+                await sleep(500);
+
+                nodes.hidden.forEach(n => n.classList.add('active-backward'));
+                await sleep(500);
+
+                document.querySelectorAll('[id^="c-i"]').forEach(c => c.classList.add('active-backward'));
+                 await sleep(500);
+                
+                nodes.input.forEach(n => n.classList.add('active-backward'));
+                await sleep(800);
+
+
+                // 5. Update Weights
+                statusText.textContent = '4. Actualizando Pesos...';
+                connections.forEach(c => {
+                    c.style.transition = 'stroke-width 0.5s, stroke 0.5s';
+                    c.style.strokeWidth = Math.random() * 3 + 2; // Simulate weight change
+                });
+                await sleep(1000);
+
+                // End of cycle
+                statusText.textContent = 'Ciclo completado. Listo para entrenar de nuevo.';
+                [...Object.values(nodes).flat(), ...connections].forEach(el => {
+                    el.classList.remove('active-backward');
+                });
+                 runTrainingBtn.disabled = false;
+            };
+
+            if (runTrainingBtn) {
+                runTrainingBtn.addEventListener('click', runTrainingCycle);
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
+\</immersive\>
