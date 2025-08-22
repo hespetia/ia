@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Tipos de Regresión en Machine Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-node {
+            border: 2px solid #00A8A8;
+            background-color: #F0FDF4;
+            color: #005858;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .flowchart-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: #008080;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#005858] mb-2">La Jerarquía de la Regresión Lineal</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Una guía visual para entender los modelos de regresión Simple, Múltiple y Polinomial en Machine Learning.</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#008080] mb-4">1. Regresión Lineal Simple: El Punto de Partida</h2>
+                <p class="mb-4 text-gray-700">Este modelo establece una relación lineal directa entre una única variable predictora (X) y una variable de respuesta (Y). Es la base para comprender cómo un factor influye en un resultado. La visualización muestra cómo se ajusta una línea recta a los datos para minimizar el error.</p>
+                <div class="chart-container">
+                    <canvas id="simpleLinearChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#008080] mb-4">2. Regresión Lineal Múltiple: El Poder de la Combinación</h2>
+                <p class="mb-4 text-gray-700">Amplía el modelo simple para incluir múltiples variables predictoras. Su gran ventaja es aislar el impacto de cada variable mientras se mantienen las demás constantes (*ceteris paribus*). Sin embargo, introduce un riesgo clave: la multicolinealidad.</p>
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg text-center text-[#005858] mb-2">Riesgo: Multicolinealidad</h3>
+                    <div class="flex items-center justify-center space-x-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
+                        <div class="text-center">
+                            <p class="font-bold text-red-700">Predictor A</p>
+                            <p class="text-sm text-red-600">(ej. Tamaño casa)</p>
+                        </div>
+                        <div class="text-4xl text-red-500 font-mono">&harr;</div>
+                        <div class="text-center">
+                            <p class="font-bold text-red-700">Predictor B</p>
+                            <p class="text-sm text-red-600">(ej. Nº Habitaciones)</p>
+                        </div>
+                    </div>
+                    <p class="text-center mt-2 text-sm text-gray-600">Cuando los predictores están altamente correlacionados, el modelo no puede distinguir sus efectos individuales, lo que genera resultados poco fiables.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#008080] mb-4">3. Regresión Polinomial: Capturando las Curvas</h2>
+                <p class="mb-4 text-gray-700">Una extensión del modelo lineal que añade potencias de las variables predictoras (X², X³, etc.) para modelar relaciones no lineales. La clave es elegir el "grado" correcto del polinomio para evitar un ajuste deficiente o excesivo.</p>
+                <div class="chart-container">
+                    <canvas id="polynomialChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#008080] mb-4">4. El Dilema: Trade-off entre Sesgo y Varianza</h2>
+                <p class="mb-4 text-gray-700">La elección del modelo es un equilibrio. Un modelo demasiado simple (alto sesgo) no captura la tendencia de los datos (subajuste). Un modelo demasiado complejo (alta varianza) se ajusta al ruido y no generaliza bien (sobreajuste). El objetivo es encontrar el punto óptimo que minimice el error total.</p>
+                <div class="chart-container">
+                    <canvas id="biasVarianceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#008080] mb-4">5. Guía para la Selección del Modelo</h2>
+                <p class="mb-6 text-gray-700">El proceso de selección de un modelo de regresión es iterativo. Comienza con el análisis visual y avanza hacia modelos más complejos solo cuando los datos lo justifican, evaluando rigurosamente el rendimiento en cada paso.</p>
+                <div class="w-full">
+                    <div class="flowchart-node">
+                        <span class="font-bold">1. Análisis Exploratorio</span><br>
+                        Visualizar la relación entre variables (Diagrama de dispersión)
+                    </div>
+                    <div class="flowchart-arrow">&darr;</div>
+                    <div class="flowchart-node">
+                        <span class="font-bold">2. ¿La relación parece lineal?</span>
+                    </div>
+                    <div class="flex justify-around mt-4">
+                        <div class="w-1/2 px-2 text-center">
+                            <div class="flowchart-arrow">&darr; <span class="text-base ml-2">Sí</span></div>
+                            <div class="flowchart-node h-full">
+                                <span class="font-bold">3a. Usar Regresión Lineal</span><br>
+                                Simple (1 predictor) o Múltiple (>1 predictor)
+                            </div>
+                        </div>
+                        <div class="w-1/2 px-2 text-center">
+                            <div class="flowchart-arrow">&darr; <span class="text-base ml-2">No</span></div>
+                            <div class="flowchart-node h-full">
+                                <span class="font-bold">3b. Usar Regresión Polinomial</span><br>
+                                Empezar con grado bajo (ej. 2)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow mt-4">&darr;</div>
+                    <div class="flowchart-node">
+                        <span class="font-bold">4. Evaluación Rigurosa</span><br>
+                        Usar métricas (RMSE) y validación cruzada para evitar sobreajuste
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#008080] mb-4">6. Métrica Clave: Error Cuadrático Medio (RMSE)</h2>
+                <p class="mb-4 text-gray-700">Mientras que el R² puede ser engañoso (aumenta con la complejidad), el RMSE mide el error promedio de predicción en las unidades originales. Un RMSE más bajo indica un mejor rendimiento. Es una métrica más fiable para comparar modelos de diferente complejidad.</p>
+                <div class="chart-container">
+                    <canvas id="rmseComparisonChart"></canvas>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-200">
+            <p class="text-gray-600">Dominar la regresión implica comprender estas herramientas no como alternativas, sino como una progresión en complejidad para modelar la realidad de la forma más precisa y generalizable posible.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const tooltipTitleCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const chartColors = {
+            primary: '#00F5D4',
+            secondary: '#00CCBF',
+            tertiary: '#00A8A8',
+            accent: '#008080',
+            dark: '#005858',
+            point: 'rgba(0, 88, 88, 0.7)'
+        };
+
+        function wrapLabels(label) {
+            if (typeof label === 'string' && label.length > 16) {
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > 16) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            }
+            return label;
+        }
+
+        const sampleData = Array.from({length: 20}, (_, i) => ({x: i, y: 2 * i + Math.random() * 10 - 5 + (i > 10 ? (i-10)*-1.5 : 0)}));
+
+        new Chart(document.getElementById('simpleLinearChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Datos Observados',
+                    data: sampleData,
+                    backgroundColor: chartColors.point,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }, {
+                    label: 'Ajuste Lineal Simple',
+                    type: 'line',
+                    data: [{x: 0, y: 2}, {x: 19, y: 30}],
+                    borderColor: chartColors.primary,
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Variable Predictora (X)' } },
+                    y: { title: { display: true, text: 'Variable de Respuesta (Y)' } }
+                },
+                ...tooltipTitleCallback
+            }
+        });
+
+        new Chart(document.getElementById('polynomialChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Datos Observados',
+                    data: sampleData,
+                    backgroundColor: chartColors.point,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }, {
+                    label: 'Grado 1 (Subajuste)',
+                    type: 'line',
+                    data: sampleData.map(p => ({x: p.x, y: p.x * 1.5 + 2})),
+                    borderColor: chartColors.secondary,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }, {
+                    label: 'Grado 3 (Buen Ajuste)',
+                    type: 'line',
+                    data: sampleData.map(p => ({x: p.x, y: 0.02*p.x**3 - 0.5*p.x**2 + 4*p.x + 1})),
+                    borderColor: chartColors.primary,
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }, {
+                    label: 'Grado 9 (Sobreajuste)',
+                    type: 'line',
+                    data: sampleData.map(p => ({x: p.x, y: p.y + (Math.random() - 0.5) * 3})).sort((a,b) => a.x - b.x),
+                    borderColor: chartColors.accent,
+                    borderWidth: 2,
+                    borderDash: [2, 2],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Variable Predictora (X)' } },
+                    y: { title: { display: true, text: 'Variable de Respuesta (Y)' } }
+                },
+                ...tooltipTitleCallback
+            }
+        });
+
+        new Chart(document.getElementById('biasVarianceChart'), {
+            type: 'line',
+            data: {
+                labels: ['Muy Simple', 'Simple', 'Óptimo', 'Complejo', 'Muy Complejo'].map(wrapLabels),
+                datasets: [{
+                    label: 'Sesgo²',
+                    data: [10, 6, 3, 1, 0.5],
+                    borderColor: chartColors.secondary,
+                    backgroundColor: 'transparent',
+                    borderWidth: 3
+                }, {
+                    label: 'Varianza',
+                    data: [0.5, 1, 2, 5, 10],
+                    borderColor: chartColors.accent,
+                    backgroundColor: 'transparent',
+                    borderWidth: 3
+                }, {
+                    label: 'Error Total',
+                    data: [10.5, 7, 5, 6, 10.5],
+                    borderColor: chartColors.primary,
+                    backgroundColor: 'rgba(0, 245, 212, 0.1)',
+                    borderWidth: 4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Complejidad del Modelo' } },
+                    y: { title: { display: true, text: 'Error de Predicción' }, beginAtZero: true }
+                },
+                ...tooltipTitleCallback
+            }
+        });
+        
+        new Chart(document.getElementById('rmseComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Regresión Lineal Simple', 'Regresión Lineal Múltiple', 'Regresión Polinomial (Grado 2)'].map(wrapLabels),
+                datasets: [{
+                    label: 'RMSE (Error de Predicción)',
+                    data: [12.5, 8.2, 5.1],
+                    backgroundColor: [chartColors.secondary, chartColors.tertiary, chartColors.primary],
+                    borderColor: chartColors.dark,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'RMSE (Menor es mejor)' }, beginAtZero: true },
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    ...tooltipTitleCallback.plugins
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
